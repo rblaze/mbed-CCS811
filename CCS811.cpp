@@ -120,13 +120,12 @@ int CCS811::getBaseline(uint16_t &value) {
 int CCS811::setBaseline(uint16_t value) {
   auto p = reinterpret_cast<const char *>(&value);
   char cmd = CCS811_BASELINE;
-  if (bus_.write(addr_, &cmd, sizeof(cmd), true) != 0) {
-    bus_.stop();
-    return CCS811_IOERROR;
-  }
 
+  bus_.start();
+  bus_.write(addr_);
+  bus_.write(cmd);
   bus_.write(p[0] & 0xff);
-  bus_.write(p[0] & 0xff);
+  bus_.write(p[1] & 0xff);
   bus_.stop();
 
   return CCS811_OK;
